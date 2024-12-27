@@ -29,7 +29,7 @@
     pkgs.noto-fonts-emoji
   ];
 
-  fonts= {
+  fonts = {
     fontconfig = {
       enable = true;
       defaultFonts = {
@@ -54,14 +54,16 @@
   };
 
   home.file = {
-    ".config/nvim/lua".source =  builtins.fetchGit {
+    ".config/nvim/lua".source =
+      builtins.fetchGit {
         url = "git@github.com:brobusta/nvimconfig.git";
         rev = "e7f9cddb488118f4f957f9385ecfc27e0b335653";
-    } + "/lua";
+      }
+      + "/lua";
     ".config/nvim/init.lua".text = ''
-        require("congvu.core")
-        require("congvu.lazy")
-      '';
+      require("congvu.core")
+      require("congvu.lazy")
+    '';
   };
 
   home.sessionVariables = {
@@ -80,10 +82,12 @@
       size = 12;
     };
     settings = {
-      include = builtins.toString (builtins.fetchurl {
-        url = "https://raw.githubusercontent.com/folke/tokyonight.nvim/21ad5c2f1027ed674d1b2cec73ced281f1c1c3f9/extras/kitty/tokyonight_night.conf";
-        sha256 = "e92085fb339ca9be916e3bc47fa6813843c6007b155d4f9bcb9fb5af545adc5c";
-      });
+      include = builtins.toString (
+        builtins.fetchurl {
+          url = "https://raw.githubusercontent.com/folke/tokyonight.nvim/21ad5c2f1027ed674d1b2cec73ced281f1c1c3f9/extras/kitty/tokyonight_night.conf";
+          sha256 = "e92085fb339ca9be916e3bc47fa6813843c6007b155d4f9bcb9fb5af545adc5c";
+        }
+      );
       scrollback_lines = 100000;
       tab_bar_style = "powerline";
       hide_window_decorations = "yes";
@@ -135,13 +139,17 @@
     enableZshIntegration = true;
     defaultCommand = "rg --files --no-ignore --hidden --follow --glob '!.git/*'";
     defaultOptions = [
-    	"--height 40% --layout=reverse --border --bind 'ctrl-y:execute-silent(wl-copy {})'"
+      "--height 40% --layout=reverse --border --bind 'ctrl-y:execute-silent(wl-copy {})'"
     ];
     changeDirWidgetCommand = "fd --type d --hidden --exclude '.git'";
     changeDirWidgetOptions = [ "--preview 'tree -C {} | head -200'" ];
     fileWidgetCommand = defaultCommand;
-    fileWidgetOptions = [ "--preview '(bat --style=changes --wrap never --color always {} || cat {} || (eza --tree --group-directories-first {} || tree -C {})) 2> /dev/null' --preview-window right:60%" ];
-    historyWidgetOptions = [ "--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'" ];
+    fileWidgetOptions = [
+      "--preview '(bat --style=changes --wrap never --color always {} || cat {} || (eza --tree --group-directories-first {} || tree -C {})) 2> /dev/null' --preview-window right:60%"
+    ];
+    historyWidgetOptions = [
+      "--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
+    ];
   };
 
   programs.tmux = {
@@ -165,15 +173,15 @@
     '';
 
     plugins = [
-       pkgs.tmuxPlugins.tmux-fzf
-       {
-         plugin = pkgs.tmuxPlugins.tokyo-night-tmux;
-         extraConfig = ''
-           set -g @tokyo-night-tmux_show_netspeed 1
-           set -g @tokyo-night-tmux_netspeed_showip 1
-           set -g @tokyo-night-tmux_netspeed_refresh 5
-         '';
-       }
+      pkgs.tmuxPlugins.tmux-fzf
+      {
+        plugin = pkgs.tmuxPlugins.tokyo-night-tmux;
+        extraConfig = ''
+          set -g @tokyo-night-tmux_show_netspeed 1
+          set -g @tokyo-night-tmux_netspeed_showip 1
+          set -g @tokyo-night-tmux_netspeed_refresh 5
+        '';
+      }
     ];
   };
 
@@ -198,7 +206,7 @@
       ls = "eza";
       v = "vim";
     };
-    plugins =  [
+    plugins = [
       {
         name = "powerlevel10k";
         src = pkgs.zsh-powerlevel10k;
@@ -224,4 +232,3 @@
   };
 
 }
-
