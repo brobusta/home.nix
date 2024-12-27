@@ -47,8 +47,6 @@ let g:rustfmt_autosave = 1
 let g:ale_fix_on_save = 1
 let g:ale_floating_preview = 1
 let g:ale_floating_window_border = repeat([''], 8)
-
-let g:lsp_diagnostics_enabled = 0
 "}}}
 
 "{{{ colorscheme
@@ -124,7 +122,7 @@ nnoremap <C-a> <esc>ggVG
 imap jk <esc>
 imap ;; <esc>A;<esc>
 nmap <silent> gf :edit <cfile><cr>
-nnoremap <leader>nt :NERDTreeToggle %<cr>
+nnoremap <leader>ef :NERDTreeToggle %<cr>
 nnoremap <leader>f :Files<cr>
 nnoremap <leader>b :Buffers<cr>
 nnoremap <leader>l :BLines<cr>

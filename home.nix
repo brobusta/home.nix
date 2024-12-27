@@ -114,6 +114,7 @@
       vim-airline-themes
       vim-startify
       vim-polyglot
+      vim-devicons
       # editor
       vim-surround
       vim-commentary
