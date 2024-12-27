@@ -37,8 +37,8 @@ set foldmethod=marker
 nnoremap <space> <nop>
 let mapleader=" "
 
-"set omnifunc=ale#completion#OmniFunc
 let g:airline#extensions#ale#enabled = 1
+let g:ale_set_highlights = 0
 let g:ale_completion_enabled = 0
 let g:ale_sign_error = '✗'
 let g:ale_sign_warning = '⚡ '
@@ -47,16 +47,20 @@ let g:rustfmt_autosave = 1
 let g:ale_fix_on_save = 1
 let g:ale_floating_preview = 1
 let g:ale_floating_window_border = repeat([''], 8)
+
+let g:lsp_diagnostics_enabled = 0
 "}}}
 
 "{{{ colorscheme
-colorscheme gruvbox8
+set termguicolors
+colorscheme catppuccin_mocha
 set background=dark
-hi Error NONE
+highlight clear ALEErrorSign
+highlight clear ALEWarningSign
 "}}}
 
 "{{{ vim-airline
-let g:airline_theme='bubblegum'
+let g:airline_theme='catppuccin_mocha'
 let g:airline_powerline_fonts = 1
 let g:airline_skip_empty_sections = 1
 if !exists('g:airline_symbols')
@@ -141,7 +145,7 @@ function! s:on_lsp_buffer_enabled() abort
   nmap <buffer> gi <plug>(lsp-implementation)
   nmap <buffer> <leader>gt <plug>(lsp-type-definition)
   nmap <buffer> <leader>rn <plug>(lsp-rename)
-  nmap <buffer> <leader>ca <plug>(lsp-code-action)
+  nmap <buffer> <leader>ca <plug>(lsp-code-action-float)
   nmap <buffer> [g <plug>(ale_previous_wrap)
   nmap <buffer> ]g <plug>(ale_next_wrap)
   nmap <buffer> K <plug>(lsp-hover)

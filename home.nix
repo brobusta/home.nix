@@ -109,10 +109,11 @@
     plugins = with pkgs.vimPlugins; [
       fzf-vim
       nerdtree
-      vim-gruvbox8
+      catppuccin-vim
       vim-airline
       vim-airline-themes
       vim-startify
+      vim-polyglot
       # editor
       vim-surround
       vim-commentary
