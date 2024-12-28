@@ -31,8 +31,9 @@ set scrolloff=8
 set splitright
 set splitbelow
 
-set clipboard=unnamed
+set clipboard=unnamedplus
 set foldmethod=marker
+set signcolumn=yes
 
 nnoremap <space> <nop>
 let mapleader=" "
@@ -51,10 +52,8 @@ let g:ale_floating_window_border = repeat([''], 8)
 
 "{{{ colorscheme
 set termguicolors
-colorscheme catppuccin_mocha
+colorscheme tokyonight-night
 set background=dark
-highlight clear ALEErrorSign
-highlight clear ALEWarningSign
 "}}}
 
 "{{{ vim-airline

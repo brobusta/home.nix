@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 {
   home.username = "congvu";
@@ -82,12 +82,7 @@
       size = 12;
     };
     settings = {
-      include = builtins.toString (
-        builtins.fetchurl {
-          url = "https://raw.githubusercontent.com/folke/tokyonight.nvim/21ad5c2f1027ed674d1b2cec73ced281f1c1c3f9/extras/kitty/tokyonight_night.conf";
-          sha256 = "e92085fb339ca9be916e3bc47fa6813843c6007b155d4f9bcb9fb5af545adc5c";
-        }
-      );
+      include = builtins.readFile "${pkgs.vimPlugins.tokyonight-nvim}/extras/kitty/tokyonight_night.conf";
       scrollback_lines = 100000;
       tab_bar_style = "powerline";
       hide_window_decorations = "yes";
@@ -109,11 +104,17 @@
 
   programs.vim = {
     enable = true;
-    extraConfig = builtins.readFile ./vimrc;
+    extraConfig = lib.mkMerge [
+      ''
+      set rtp+=${pkgs.vimPlugins.tokyonight-nvim}/extras/vim
+      ''
+      (builtins.readFile ./vimrc)
+    ];
     plugins = with pkgs.vimPlugins; [
       fzf-vim
       nerdtree
       catppuccin-vim
+      tokyonight-nvim
       vim-airline
       vim-airline-themes
       vim-startify
@@ -139,16 +140,22 @@
     enableZshIntegration = true;
     defaultCommand = "rg --files --no-ignore --hidden --follow --glob '!.git/*'";
     defaultOptions = [
-      "--height 40% --layout=reverse --border --bind 'ctrl-y:execute-silent(wl-copy {})'"
+      "--height 40%"
+      "--layout=reverse"
+      "--border"
+      "--bind 'ctrl-y:execute-silent(wl-copy {})'"
     ];
     changeDirWidgetCommand = "fd --type d --hidden --exclude '.git'";
     changeDirWidgetOptions = [ "--preview 'tree -C {} | head -200'" ];
     fileWidgetCommand = defaultCommand;
     fileWidgetOptions = [
-      "--preview '(bat --style=changes --wrap never --color always {} || cat {} || (eza --tree --group-directories-first {} || tree -C {})) 2> /dev/null' --preview-window right:60%"
+      "--preview '(bat --style=changes --wrap never --color always {} || cat {} || (eza --tree --group-directories-first {} || tree -C {})) 2> /dev/null'"
+      "--preview-window right:60%"
     ];
     historyWidgetOptions = [
-      "--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
+      "--preview 'echo {}'"
+      "--preview-window down:3:hidden:wrap"
+      "--bind '?:toggle-preview'"
     ];
   };
 
@@ -198,7 +205,7 @@
     initExtra = ''
       [ -f $HOME/.nix-profile/etc/profile.d/nix.sh ] && source $HOME/.nix-profile/etc/profile.d/nix.sh
       [ -f $HOME/.p10k.zsh ] && source $HOME/.p10k.zsh
-      eval "$(direnv hook zsh)"
+      [ -f ${pkgs.vimPlugins.tokyonight-nvim}/extras/fzf/tokyonight_night.sh ] && source ${pkgs.vimPlugins.tokyonight-nvim}/extras/fzf/tokyonight_night.sh
     '';
     shellAliases = {
       l = "eza -alh";
