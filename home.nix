@@ -1,32 +1,39 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   home.username = "congvu";
   home.homeDirectory = "/home/congvu";
   home.stateVersion = "24.11";
 
-  home.packages = [
-    pkgs.tig
-    pkgs.curl
-    pkgs.wget
-    pkgs.htop
-    pkgs.eza
-    pkgs.fd
-    pkgs.bat
-    pkgs.ripgrep
-    pkgs.coreutils
-    pkgs.unzip
-    pkgs.tree
-    pkgs.wl-clipboard
-    pkgs.pfetch
-    pkgs.zsh-powerlevel10k
-    pkgs.python3Full
-    pkgs.python3.pkgs.pip
+  home.packages = with pkgs; [
+    bat
+    btop
+    coreutils
+    curl
+    eza
+    fd
+    helix
+    htop
+    pfetch
+    python3.pkgs.pip
+    python3Full
+    ripgrep
+    tig
+    tree
+    unzip
+    wget
+    wl-clipboard
+    yazi
 
     # fonts
-    pkgs.nerd-fonts.jetbrains-mono
-    pkgs.nerd-fonts.iosevka
-    pkgs.noto-fonts-emoji
+    nerd-fonts.iosevka
+    nerd-fonts.jetbrains-mono
+    noto-fonts-emoji
   ];
 
   fonts = {
@@ -57,17 +64,19 @@
     ".config/nvim/lua".source =
       builtins.fetchGit {
         url = "git@github.com:brobusta/nvimconfig.git";
-        rev = "e7f9cddb488118f4f957f9385ecfc27e0b335653";
+        ref = "main";
       }
       + "/lua";
     ".config/nvim/init.lua".text = ''
       require("congvu.core")
       require("congvu.lazy")
     '';
+    ".config/eza/theme.yml".source = "${pkgs.vimPlugins.tokyonight-nvim}/extras/eza/tokyonight.yml";
+    ".config/yazi/theme.toml".source =
+      "${pkgs.vimPlugins.tokyonight-nvim}/extras/yazi/tokyonight_night.toml";
   };
 
   home.sessionVariables = {
-    EDITOR = "nvim";
     TERMINAL = "kitty";
   };
 
@@ -86,6 +95,8 @@
       scrollback_lines = 100000;
       tab_bar_style = "powerline";
       hide_window_decorations = "yes";
+      allow_remote_control = true;
+      listen_on = "unix:/tmp/kitty";
     };
   };
 
@@ -96,40 +107,36 @@
     userEmail = "vuthanhcong.ict@gmail.com";
   };
 
-  programs.neovim = {
-    enable = true;
-    defaultEditor = true;
-    viAlias = true;
-  };
+  programs.neovim.enable = true;
 
   programs.vim = {
     enable = true;
+    defaultEditor = true;
     extraConfig = lib.mkMerge [
       ''
-      set rtp+=${pkgs.vimPlugins.tokyonight-nvim}/extras/vim
+        set rtp+=${pkgs.vimPlugins.tokyonight-nvim}/extras/vim
       ''
       (builtins.readFile ./vimrc)
     ];
     plugins = with pkgs.vimPlugins; [
       fzf-vim
       nerdtree
-      catppuccin-vim
       tokyonight-nvim
       vim-airline
       vim-airline-themes
-      vim-startify
-      vim-polyglot
       vim-devicons
+      vim-polyglot
+      vim-startify
       # editor
-      vim-surround
       vim-commentary
+      vim-surround
       # linter & completion & snippet
       ale
-      asyncomplete-vim
       asyncomplete-lsp-vim
+      asyncomplete-vim
       vim-lsp
-      vim-lsp-settings
       vim-lsp-ale
+      vim-lsp-settings
       vim-vsnip
       vim-vsnip-integ
     ];
@@ -212,6 +219,8 @@
       ll = "eza -l";
       ls = "eza";
       v = "vim";
+      vi = "vim";
+      y = "yazi";
     };
     plugins = [
       {
@@ -229,6 +238,39 @@
         "history"
         "direnv"
       ];
+    };
+  };
+
+  programs.bat = {
+    enable = true;
+    config = {
+      theme = "tokyonight";
+    };
+    themes = {
+      tokyonight = {
+        src = pkgs.vimPlugins.tokyonight-nvim;
+        file = "extras/sublime/tokyonight_night.tmTheme";
+      };
+    };
+  };
+
+  programs.eza = {
+    enable = true;
+    enableZshIntegration = true;
+    icons = "auto";
+    extraOptions = [
+      "--group-directories-first"
+      "--header"
+    ];
+  };
+
+  programs.btop = {
+    enable = true;
+    settings = {
+      color_theme = "tokyonight";
+      vim_keys = true;
+      rounded_corners = true;
+      theme_background = false;
     };
   };
 

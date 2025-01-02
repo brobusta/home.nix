@@ -35,6 +35,11 @@ set clipboard=unnamedplus
 set foldmethod=marker
 set signcolumn=yes
 
+" workaround for vim-devicons
+let &t_ut=''
+set t_RV=
+set ttymouse=xterm2
+
 nnoremap <space> <nop>
 let mapleader=" "
 
@@ -48,6 +53,9 @@ let g:rustfmt_autosave = 1
 let g:ale_fix_on_save = 1
 let g:ale_floating_preview = 1
 let g:ale_floating_window_border = repeat([''], 8)
+
+" To fix ugly lsp hover text
+let g:polyglot_disabled = ['markdown']
 "}}}
 
 "{{{ colorscheme
@@ -57,7 +65,7 @@ set background=dark
 "}}}
 
 "{{{ vim-airline
-let g:airline_theme='catppuccin_mocha'
+let g:airline_theme='base16_classic'
 let g:airline_powerline_fonts = 1
 let g:airline_skip_empty_sections = 1
 if !exists('g:airline_symbols')
@@ -133,7 +141,7 @@ cnoremap w!! w !sudo tee > /dev/null %
 " vim-lsp
 function! s:on_lsp_buffer_enabled() abort
   setlocal omnifunc=lsp#complete
-  setlocal signcolumn=yes
+
   if exists('+tagfunc') | setlocal tagfunc=lsp#tagfunc | endif
   nmap <buffer> gd <plug>(lsp-definition)
   nmap <buffer> gs <plug>(lsp-document-symbol-search)
@@ -156,7 +164,7 @@ endfunction
 augroup lsp_install
     au!
     " call s:on_lsp_buffer_enabled only for languages that has the server registered.
-    autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
+    au User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
 augroup END
 
 " asyncomplete
@@ -179,5 +187,4 @@ smap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-T
 nnoremap <leader>wf :w!<cr>
 nnoremap <leader>Q :qa!<cr>
 vnoremap <C-r> "hy:%s,<C-r>h,,g<left><left>
-
 "}}}
