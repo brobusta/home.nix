@@ -14,11 +14,14 @@
     bat
     btop
     coreutils
+    cowsay
     curl
     eza
     fd
+    fortune
     helix
     htop
+    lazygit
     pfetch
     python3.pkgs.pip
     python3Full
@@ -174,7 +177,6 @@
     customPaneNavigationAndResize = true;
 
     extraConfig = ''
-      # keybindings
       set-option -g status-position top
       bind-key -T copy-mode-vi v send-keys -X begin-selection
       bind-key -T copy-mode-vi C-v send-keys -X rectangle-toggle
@@ -207,7 +209,8 @@
     initExtra = ''
       [ -f $HOME/.nix-profile/etc/profile.d/nix.sh ] && source $HOME/.nix-profile/etc/profile.d/nix.sh
       [ -f $HOME/.p10k.zsh ] && source $HOME/.p10k.zsh
-      [ -f ${pkgs.vimPlugins.tokyonight-nvim}/extras/fzf/tokyonight_night.sh ] && source ${pkgs.vimPlugins.tokyonight-nvim}/extras/fzf/tokyonight_night.sh
+      fzfTheme=${pkgs.vimPlugins.tokyonight-nvim}/extras/fzf/tokyonight_night.sh
+      [ -f "${fzfTheme}" ] && source "${fzfTheme}"
     '';
     shellAliases = {
       l = "eza -alh";
@@ -223,6 +226,11 @@
         name = "powerlevel10k";
         src = pkgs.zsh-powerlevel10k;
         file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
+      }
+      {
+        name = "zsh-nix-shell";
+        src = pkgs.zsh-nix-shell;
+        file = "share/zsh-nix-shell/nix-shell.plugin.zsh";
       }
     ];
     oh-my-zsh = {

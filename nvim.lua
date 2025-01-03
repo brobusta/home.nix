@@ -139,46 +139,6 @@ require("lazy").setup({
     end,
   },
   {
-    "goolord/alpha-nvim",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
-    config = function()
-      local theme = require("alpha.themes.theta")
-      theme.header.val = {
-        "⠀⠀⠀⠀⠀⢀⣠⣴⠾⠟⠛⠛⠛⠛⠛⠷⣦⣄⡀⠀⠀⠀⠀⠀ ",
-        "⠀⠀⠀⢀⣴⠟⣉⣠⣤⣤⣤⣤⣤⣄⡀⠀⠀⠉⠻⣦⡀⠀⠀⠀ ",
-        "⠀⠀⣰⣿⣵⣿⣿⡿⠛⠉⠀⠀⠀⠀⠉⠑⠄⡀⠀⠈⢻⣆⠀⠀ ",
-        "⠀⢰⡟⠹⣿⣿⣿⣷⣶⣦⣄⡀⢀⣠⣴⣶⣿⣿⣿⣿⣿⣿⠀⠀ ",
-        "⠀⣿⠁⠀⢸⢿⣿⣿⣿⣿⠟⠉⠉⠻⣿⣿⣿⣿⡿⣿⣿⡏⣿⠀ ",
-        "⠀⣿⠀⠀⢸⠀⠙⠻⣿⡇⠀⠀⠀⠀⢸⣿⠟⠉⠀⣿⣿⠀⣿⠇ ",
-        "⠀⣿⡀⠀⢸⡄⠀⠀⠈⢻⣦⣀⣀⣤⣿⠁⠀⠀⢀⣿⠃⢀⣿⠀ ",
-        "⠀⠸⣧⠀⠀⢿⡄⠀⠀⠸⣿⣿⣿⣿⡇⠀⠀⢀⡾⠃⠀⣼⠏⠀ ",
-        "⠀⠀⠹⣷⡀⠈⢿⣶⣄⡀⢿⣿⣿⣿⢃⡠⠔⠋⠀⢀⣼⠏⠀⠀ ",
-        "⠀⠀⠀⠈⠻⣦⣀⠙⢿⣿⣿⣿⣿⡏⠁⠀⠀⣀⣴⠟⠁⠀⠀⠀ ",
-        "⠀⠀⠀⠀⠀⠈⠙⠻⠶⣯⣿⣿⣿⣤⣴⠶⠟⠋⠁⠀⠀⠀⠀⠀ ",
-      }
-      -- remove configuration button
-      table.remove(theme.buttons.val, 6)
-      -- do not show bufferline when alpha open
-      theme.config.opts.setup = function()
-        vim.api.nvim_create_autocmd("User", {
-          pattern = "AlphaReady",
-          desc = "disable tabline for alpha",
-          callback = function()
-            vim.opt.showtabline = 0
-          end,
-        })
-        vim.api.nvim_create_autocmd("BufUnload", {
-          buffer = 0,
-          desc = "enable tabline after alpha",
-          callback = function()
-            vim.opt.showtabline = 2
-          end,
-        })
-      end
-      require("alpha").setup(theme.config)
-    end,
-  },
-  {
     "windwp/nvim-autopairs",
     event = "InsertEnter",
     config = true,
@@ -549,6 +509,7 @@ require("lazy").setup({
       lualine.setup({
         options = {
           theme = "tokyonight-night",
+          disabled_filetypes = { "alpha", "NVimTree" },
         },
       })
     end,
@@ -823,6 +784,31 @@ require("lazy").setup({
     },
     init = function()
       vim.opt.conceallevel = 1
+    end,
+  },
+  {
+    "folke/snacks.nvim",
+    priority = 1001,
+    lazy = false,
+    config = function()
+      local Snacks = require("snacks")
+      Snacks.setup({
+        dashboard = {
+          sections = {
+            { section = "header" },
+            { section = "keys", gap = 1, padding = 1 },
+            { section = "startup" },
+            {
+              section = "terminal",
+              cmd = "fortune -s | cowsay",
+              random = 10,
+              pane = 2,
+              indent = 4,
+              height = 30,
+            },
+          },
+        },
+      })
     end,
   },
 })
