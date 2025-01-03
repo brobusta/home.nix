@@ -61,16 +61,6 @@
   };
 
   home.file = {
-    ".config/nvim/lua".source =
-      builtins.fetchGit {
-        url = "git@github.com:brobusta/nvimconfig.git";
-        ref = "main";
-      }
-      + "/lua";
-    ".config/nvim/init.lua".text = ''
-      require("congvu.core")
-      require("congvu.lazy")
-    '';
     ".config/eza/theme.yml".source = "${pkgs.vimPlugins.tokyonight-nvim}/extras/eza/tokyonight.yml";
     ".config/yazi/theme.toml".source =
       "${pkgs.vimPlugins.tokyonight-nvim}/extras/yazi/tokyonight_night.toml";
@@ -107,11 +97,16 @@
     userEmail = "vuthanhcong.ict@gmail.com";
   };
 
-  programs.neovim.enable = true;
-
-  programs.vim = {
+  programs.neovim = {
     enable = true;
     defaultEditor = true;
+    vimdiffAlias = true;
+    extraLuaConfig = builtins.readFile ./nvim.lua;
+  };
+
+  programs.vim = {
+    # use neovim for now
+    enable = false;
     extraConfig = lib.mkMerge [
       ''
         set rtp+=${pkgs.vimPlugins.tokyonight-nvim}/extras/vim
@@ -218,8 +213,9 @@
       l = "eza -alh";
       ll = "eza -l";
       ls = "eza";
-      v = "vim";
-      vi = "vim";
+      v = "nvim";
+      vi = "nvim";
+      vim = "nvim";
       y = "yazi";
     };
     plugins = [

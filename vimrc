@@ -24,8 +24,8 @@ set noerrorbells visualbell t_vb=
 set number
 set relativenumber
 
-set shiftwidth=4
-set softtabstop=4
+set shiftwidth=2
+set softtabstop=2
 set expandtab
 set scrolloff=8
 set splitright
@@ -69,7 +69,7 @@ let g:airline_theme='base16_classic'
 let g:airline_powerline_fonts = 1
 let g:airline_skip_empty_sections = 1
 if !exists('g:airline_symbols')
-    let g:airline_symbols = {}
+  let g:airline_symbols = {}
 endif
 " unicode symbols
 let g:airline_left_sep = '»'
@@ -162,9 +162,9 @@ function! s:on_lsp_buffer_enabled() abort
 endfunction
 
 augroup lsp_install
-    au!
-    " call s:on_lsp_buffer_enabled only for languages that has the server registered.
-    au User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
+  au!
+  " call s:on_lsp_buffer_enabled only for languages that has the server registered.
+  au User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
 augroup END
 
 " asyncomplete
