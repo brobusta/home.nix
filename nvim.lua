@@ -25,14 +25,14 @@ local keymap = vim.keymap
 keymap.set({ "n", "v" }, ";", ":", { desc = "Remap ; to :" })
 
 -- editor
-keymap.set("n", "<leader>wf", "<cmd>w!<CR>", { desc = "Write file" })
-keymap.set("n", "<C-a>", "<ESC>ggVG", { desc = "Selecting all text" })
+keymap.set("n", "<leader>wf", "<cmd>w!<cr>", { desc = "Write file" })
+keymap.set("n", "<C-a>", "<esc>ggVG", { desc = "Selecting all text" })
 keymap.set("v", "<C-r>", '"hy:%s,<C-r>h,,g<left><left>', { desc = "Replace selected text" })
 keymap.set("v", "<", "<gv", { desc = "Move selected text" })
 keymap.set("v", ">", ">gv", { desc = "Move selected text" })
 
 -- use jk to exit insert mode
-keymap.set("i", "jk", "<ESC>", { desc = "Exit insert mode with jk" })
+keymap.set("i", "jk", "<esc>", { desc = "Exit insert mode with jk" })
 
 -- clear search highlights
 keymap.set("n", "<leader>nh", vim.cmd.nohl, { desc = "Clear search highlights" })
@@ -60,13 +60,13 @@ keymap.set("n", "<leader>l", "<C-w>l", { desc = "Move right" })
 keymap.set("n", "<S-l>", vim.cmd.bnext, { desc = "Go to next buffer" })
 keymap.set("n", "<S-h>", vim.cmd.bprevious, { desc = "Go to previous buffer" })
 keymap.set("n", "<leader>q", vim.cmd.bdelete, { desc = "Close current buffer" }) -- close current split window
-keymap.set("n", "<leader>Q", "<cmd>qa!<CR>", { desc = "Close all" }) -- close all window
+keymap.set("n", "<leader>Q", "<cmd>qa!<cr>", { desc = "Close all" }) -- close all window
 
-keymap.set("n", "<leader>to", "<cmd>tabnew<CR>", { desc = "Open new tab" }) -- open new tab
-keymap.set("n", "<leader>tx", "<cmd>tabclose<CR>", { desc = "Close current tab" }) -- close current tab
-keymap.set("n", "<leader>tn", "<cmd>tabn<CR>", { desc = "Go to next tab" }) --  go to next tab
-keymap.set("n", "<leader>tp", "<cmd>tabp<CR>", { desc = "Go to previous tab" }) --  go to previous tab
-keymap.set("n", "<leader>tf", "<cmd>tabnew %<CR>", { desc = "Open current buffer in new tab" }) --  move current buffer to new tab
+keymap.set("n", "<leader>to", "<cmd>tabnew<cr>", { desc = "Open new tab" }) -- open new tab
+keymap.set("n", "<leader>tx", "<cmd>tabclose<cr>", { desc = "Close current tab" }) -- close current tab
+keymap.set("n", "<leader>tn", "<cmd>tabn<cr>", { desc = "Go to next tab" }) --  go to next tab
+keymap.set("n", "<leader>tp", "<cmd>tabp<cr>", { desc = "Go to previous tab" }) --  go to previous tab
+keymap.set("n", "<leader>tf", "<cmd>tabnew %<cr>", { desc = "Open current buffer in new tab" }) --  move current buffer to new tab
 
 ---
 -- General Options --
@@ -146,6 +146,7 @@ require("lazy").setup({
   {
     "akinsho/bufferline.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = true,
   },
   {
     "folke/tokyonight.nvim",
@@ -155,90 +156,22 @@ require("lazy").setup({
     end,
   },
   {
-    "hrsh7th/nvim-cmp",
-    event = "InsertEnter",
-    dependencies = {
-      "hrsh7th/cmp-buffer", -- source for text in buffer
-      "hrsh7th/cmp-path", -- source for file system paths
-      {
-        "L3MON4D3/LuaSnip", -- snippet engine
-        version = "v2.*",
+    "saghen/blink.cmp",
+    dependencies = "rafamadriz/friendly-snippets",
+    version = "*",
+    opts = {
+      keymap = { preset = "enter" },
+      appearance = {
+        use_nvim_cmp_as_default = true,
+        nerd_font_variant = "mono",
       },
-      "saadparwaiz1/cmp_luasnip", -- for autocompletion
-      "rafamadriz/friendly-snippets", -- useful snippets
-      "onsails/lspkind.nvim", -- vs-code like pictograms
+
+      sources = {
+        default = { "lsp", "path", "snippets", "buffer" },
+        cmdline = {},
+      },
     },
-    config = function()
-      local cmp = require("cmp")
-      local luasnip = require("luasnip")
-      local lspkind = require("lspkind")
-
-      -- loads vscode style snippets from installed plugins (e.g. friendly-snippets)
-      require("luasnip.loaders.from_vscode").lazy_load()
-
-      cmp.setup({
-        completion = {
-          completeopt = "menu,menuone,preview,noselect",
-        },
-        snippet = {
-          expand = function(args)
-            luasnip.lsp_expand(args.body)
-          end,
-        },
-        mapping = cmp.mapping.preset.insert({
-          ["<C-u>"] = cmp.mapping.scroll_docs(-4),
-          ["<C-d>"] = cmp.mapping.scroll_docs(4),
-          ["<CR>"] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-              if luasnip.expandable() then
-                luasnip.expand()
-              else
-                cmp.confirm({
-                  select = true,
-                })
-              end
-            else
-              fallback()
-            end
-          end),
-
-          ["<Tab>"] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-              cmp.select_next_item()
-            elseif luasnip.locally_jumpable(1) then
-              luasnip.jump(1)
-            else
-              fallback()
-            end
-          end, { "i", "s" }),
-
-          ["<S-Tab>"] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-              cmp.select_prev_item()
-            elseif luasnip.locally_jumpable(-1) then
-              luasnip.jump(-1)
-            else
-              fallback()
-            end
-          end, { "i", "s" }),
-        }),
-        -- sources for autocompletion
-        sources = cmp.config.sources({
-          { name = "nvim_lsp" }, -- lsp
-          { name = "luasnip" }, -- snippets
-          { name = "buffer" }, -- text within current buffer
-          { name = "path" }, -- file system paths
-        }),
-
-        -- configure lspkind for vs-code like pictograms in completion menu
-        formatting = {
-          format = lspkind.cmp_format({
-            maxwidth = 50,
-            ellipsis_char = "...",
-          }),
-        },
-      })
-    end,
+    opts_extend = { "sources.default" },
   },
   {
     "stevearc/dressing.nvim", -- for improving vim input experience
@@ -336,7 +269,7 @@ require("lazy").setup({
         map("n", "<leader>td", gitsigns.toggle_deleted)
 
         -- Text object
-        map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>")
+        map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<cr>")
       end,
     },
   },
@@ -371,17 +304,12 @@ require("lazy").setup({
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
-      "hrsh7th/cmp-nvim-lsp",
+      "saghen/blink.cmp",
     },
     config = function()
-      -- import lspconfig plugin
       local lspconfig = require("lspconfig")
-
-      -- import mason_lspconfig plugin
       local mason_lspconfig = require("mason-lspconfig")
-
-      -- import cmp-nvim-lsp plugin
-      local cmp_nvim_lsp = require("cmp_nvim_lsp")
+      local cmp = require("blink.cmp")
 
       vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup("UserLspConfig", {}),
@@ -398,19 +326,19 @@ require("lazy").setup({
 
           -- set keybinds
           opts.desc = "Show LSP references"
-          keymap.set("n", "gR", "<cmd>Telescope lsp_references<CR>", opts) -- show definition, references
+          keymap.set("n", "gR", "<cmd>Telescope lsp_references<cr>", opts) -- show definition, references
 
           opts.desc = "Go to declaration"
           keymap.set("n", "gD", vim.lsp.buf.declaration, opts) -- go to declaration
 
           opts.desc = "Show LSP definitions"
-          keymap.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts) -- show lsp definitions
+          keymap.set("n", "gd", "<cmd>Telescope lsp_definitions<cr>", opts) -- show lsp definitions
 
           opts.desc = "Show LSP implementations"
-          keymap.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts) -- show lsp implementations
+          keymap.set("n", "gi", "<cmd>Telescope lsp_implementations<cr>", opts) -- show lsp implementations
 
           opts.desc = "Show LSP type definitions"
-          keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", opts) -- show lsp type definitions
+          keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<cr>", opts) -- show lsp type definitions
 
           opts.desc = "See available code actions"
           keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts) -- see available code actions, in visual mode will apply to selection
@@ -419,7 +347,7 @@ require("lazy").setup({
           keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts) -- smart rename
 
           opts.desc = "Show buffer diagnostics"
-          keymap.set("n", "<leader>D", "<cmd>Telescope diagnostics bufnr=0<CR>", opts) -- show  diagnostics for file
+          keymap.set("n", "<leader>D", "<cmd>Telescope diagnostics bufnr=0<cr>", opts) -- show  diagnostics for file
 
           opts.desc = "Show line diagnostics"
           keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts) -- show diagnostics for line
@@ -434,7 +362,7 @@ require("lazy").setup({
           keymap.set("n", "K", vim.lsp.buf.hover, opts) -- show documentation for what is under cursor
 
           opts.desc = "Restart LSP"
-          keymap.set("n", "<leader>rs", ":LspRestart<CR>", opts) -- mapping to restart lsp if necessary
+          keymap.set("n", "<leader>rs", ":LspRestart<cr>", opts) -- mapping to restart lsp if necessary
 
           opts.desc = "Toggle inlay hints"
           keymap.set("n", "<leader>dh", function()
@@ -458,7 +386,7 @@ require("lazy").setup({
       })
 
       -- used to enable autocompletion (assign to every lsp server config)
-      local capabilities = cmp_nvim_lsp.default_capabilities()
+      local capabilities = cmp.get_lsp_capabilities()
 
       -- Change the Diagnostic symbols in the sign column (gutter)
       local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
@@ -569,7 +497,6 @@ require("lazy").setup({
     event = "VeryLazy",
     dependencies = {
       "MunifTanjim/nui.nvim",
-      "rcarriga/nvim-notify",
     },
     config = function()
       local noice = require("noice")
@@ -602,22 +529,22 @@ require("lazy").setup({
 
       require("nvim-tree").setup({})
 
-      keymap.set("n", "<leader>ee", "<cmd>NvimTreeToggle<CR>", { desc = "Toggle file explorer" }) -- toggle file explorer
+      keymap.set("n", "<leader>ee", "<cmd>NvimTreeToggle<cr>", { desc = "Toggle file explorer" }) -- toggle file explorer
       keymap.set(
         "n",
         "<leader>ef",
-        "<cmd>NvimTreeFindFileToggle<CR>",
+        "<cmd>NvimTreeFindFileToggle<cr>",
         { desc = "Toggle file explorer on current file" }
       ) -- toggle file explorer on current file
-      keymap.set("n", "<leader>ec", "<cmd>NvimTreeCollapse<CR>", { desc = "Collapse file explorer" }) -- collapse file explorer
-      keymap.set("n", "<leader>er", "<cmd>NvimTreeRefresh<CR>", { desc = "Refresh file explorer" }) -- refresh file explorer
+      keymap.set("n", "<leader>ec", "<cmd>NvimTreeCollapse<cr>", { desc = "Collapse file explorer" }) -- collapse file explorer
+      keymap.set("n", "<leader>er", "<cmd>NvimTreeRefresh<cr>", { desc = "Refresh file explorer" }) -- refresh file explorer
     end,
   },
   {
     "lambdalisue/suda.vim",
     config = function()
-      keymap.set("n", "<leader>sr", "<cmd>SudaRead<CR>", { desc = "Read with sudo" })
-      keymap.set("n", "<leader>sw", "<cmd>SudaWrite<CR>", { desc = "Write with sudo" })
+      keymap.set("n", "<leader>sr", "<cmd>SudaRead<cr>", { desc = "Read with sudo" })
+      keymap.set("n", "<leader>sw", "<cmd>SudaWrite<cr>", { desc = "Write with sudo" })
     end,
   },
   {
@@ -713,15 +640,15 @@ require("lazy").setup({
     },
     cmd = "Trouble",
     keys = {
-      { "<leader>xw", "<cmd>Trouble diagnostics toggle<CR>", desc = "Open trouble workspace diagnostics" },
+      { "<leader>xw", "<cmd>Trouble diagnostics toggle<cr>", desc = "Open trouble workspace diagnostics" },
       {
         "<leader>xd",
-        "<cmd>Trouble diagnostics toggle filter.buf=0<CR>",
+        "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
         desc = "Open trouble document diagnostics",
       },
-      { "<leader>xq", "<cmd>Trouble quickfix toggle<CR>", desc = "Open trouble quickfix list" },
-      { "<leader>xl", "<cmd>Trouble loclist toggle<CR>", desc = "Open trouble location list" },
-      { "<leader>xt", "<cmd>Trouble todo toggle<CR>", desc = "Open todos in trouble" },
+      { "<leader>xq", "<cmd>Trouble quickfix toggle<cr>", desc = "Open trouble quickfix list" },
+      { "<leader>xl", "<cmd>Trouble loclist toggle<cr>", desc = "Open trouble location list" },
+      { "<leader>xt", "<cmd>Trouble todo toggle<cr>", desc = "Open todos in trouble" },
     },
   },
   {
