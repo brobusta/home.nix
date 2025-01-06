@@ -160,7 +160,14 @@ require("lazy").setup({
     dependencies = "rafamadriz/friendly-snippets",
     version = "*",
     opts = {
-      keymap = { preset = "enter" },
+      keymap = {
+        preset = "enter",
+        ["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
+        ["<C-e>"] = { "hide" },
+        ["<CR>"] = { "accept", "fallback" },
+        ["<S-Tab>"] = { "snippet_backward", "select_prev", "fallback" },
+        ["<Tab>"] = { "snippet_forward", "select_next", "fallback" },
+      },
       appearance = {
         use_nvim_cmp_as_default = true,
         nerd_font_variant = "mono",
