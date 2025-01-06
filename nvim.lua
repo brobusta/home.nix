@@ -665,27 +665,6 @@ require("lazy").setup({
     end,
   },
   {
-    "akinsho/toggleterm.nvim",
-    version = "*",
-    config = function()
-      function _G.set_terminal_keymaps()
-        local opts = { buffer = 0 }
-        keymap.set("t", "<esc>", [[<C-\><C-n>]], opts)
-        keymap.set("t", "kj", [[<C-\><C-n>]], opts)
-        keymap.set("t", "<C-h>", [[<Cmd>wincmd h<CR>]], opts)
-        keymap.set("t", "<C-j>", [[<Cmd>wincmd j<CR>]], opts)
-        keymap.set("t", "<C-k>", [[<Cmd>wincmd k<CR>]], opts)
-        keymap.set("t", "<C-l>", [[<Cmd>wincmd l<CR>]], opts)
-        keymap.set("t", "<C-w>", [[<C-\><C-n><C-w>]], opts)
-      end
-
-      vim.cmd("autocmd! TermOpen term://*toggleterm#* lua set_terminal_keymaps()")
-      require("toggleterm").setup({
-        open_mapping = [[<c-\>]],
-      })
-    end,
-  },
-  {
     "nvim-treesitter/nvim-treesitter",
     event = { "BufReadPre", "BufNewFile" },
     build = ":TSUpdate",
@@ -808,6 +787,59 @@ require("lazy").setup({
             },
           },
         },
+        notifier = { enabled = true },
+        quickfile = { enabled = true },
+        scroll = { enabled = true },
+        toggle = {
+          color = {
+            enabled = "green",
+            disabled = "red",
+          },
+        },
+        terminal = {
+          win = {
+            relative = "editor",
+            position = "float",
+            width = 0.85,
+            height = 0.85,
+            border = "rounded",
+          },
+        },
+      })
+      keymap.set({ "n", "t" }, "<C-/>", function()
+        Snacks.terminal()
+      end, { desc = "Toggle Terminal" })
+      keymap.set("n", "<leader>z", function()
+        Snacks.zen()
+      end, { desc = "Toggle Zen Mode" })
+      keymap.set("n", "<leader>na", function()
+        Snacks.notifier.show_history()
+      end, { desc = "Show Notification History" })
+      keymap.set("n", "<leader>un", function()
+        Snacks.notifier.hide()
+      end, { desc = "Dismiss All Notification" })
+
+      keymap.set("n", "<leader>gB", function()
+        Snacks.gitbrowse()
+      end, { desc = "Git Browse" })
+      keymap.set("n", "<leader>gg", function()
+        Snacks.lazygit()
+      end, { desc = "Git" })
+      keymap.set("n", "<leader>gl", function()
+        Snacks.lazygit.log()
+      end, { desc = "Git Log" })
+
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "VeryLazy",
+        callback = function()
+          Snacks.toggle.option("spell", { name = "Spelling" }):map("<leader>us")
+          Snacks.toggle.option("wrap", { name = "Wrap" }):map("<leader>uw")
+          Snacks.toggle.diagnostics():map("<leader>ud")
+          Snacks.toggle.line_number():map("<leader>ul")
+          Snacks.toggle.inlay_hints():map("<leader>uh")
+          Snacks.toggle.indent():map("<leader>ui")
+          Snacks.toggle.dim():map("<leader>uD")
+        end,
       })
     end,
   },
