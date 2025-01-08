@@ -220,7 +220,7 @@
       [ -f $HOME/.nix-profile/etc/profile.d/nix.sh ] && source $HOME/.nix-profile/etc/profile.d/nix.sh
       [ -f $HOME/.p10k.zsh ] && source $HOME/.p10k.zsh
       fzfTheme=${pkgs.vimPlugins.tokyonight-nvim}/extras/fzf/tokyonight_night.sh
-      [ -f "${fzfTheme}" ] && source "${fzfTheme}"
+      [ -f "$fzfTheme" ] && source "$fzfTheme"
     '';
     shellAliases = {
       l = "eza -alh";
