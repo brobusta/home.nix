@@ -74,7 +74,17 @@
   };
 
   programs.home-manager.enable = true;
-  programs.ssh.enable = true;
+  programs.ssh = {
+    enable = true;
+    extraConfig = ''
+      Host work-pc
+        HostName 10.48.70.60
+        User cong.vu
+      Host work-lt
+        HostName 10.48.72.75
+        User cong.vu
+    '';
+  };
 
   programs.kitty = {
     enable = true;
