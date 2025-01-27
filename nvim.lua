@@ -83,9 +83,6 @@ opt.expandtab = true -- expand tab to spaces
 opt.autoindent = true -- copy indent from current line when starting new one
 opt.scrolloff = 8 -- keep 8 lines below and above the cursor
 
--- line wrapping
-opt.wrap = false -- disable line wrapping
-
 -- search settings
 opt.ignorecase = true -- ignore case when searching
 opt.smartcase = true -- if you include mixed case in your search, assumes you want case-sensitive
@@ -157,7 +154,10 @@ require("lazy").setup({
   },
   {
     "saghen/blink.cmp",
-    dependencies = "rafamadriz/friendly-snippets",
+    dependencies = {
+      "rafamadriz/friendly-snippets",
+      "saghen/blink.compat",
+    },
     version = "*",
     opts = {
       keymap = {
@@ -174,8 +174,36 @@ require("lazy").setup({
       },
 
       sources = {
-        default = { "lsp", "path", "snippets", "buffer" },
+        default = {
+          "lsp",
+          "path",
+          "snippets",
+          "buffer",
+          "obsidian",
+          "obsidian_new",
+          "obsidian_tags",
+          "render_markdown",
+        },
         cmdline = {},
+        providers = {
+          obsidian = {
+            name = "obsidian",
+            module = "blink.compat.source",
+          },
+          obsidian_new = {
+            name = "obsidian_new",
+            module = "blink.compat.source",
+          },
+          obsidian_tags = {
+            name = "obsidian_tags",
+            module = "blink.compat.source",
+          },
+          render_markdown = {
+            name = "RenderMarkdown",
+            module = "render-markdown.integ.blink",
+            fallbacks = { "lsp" },
+          },
+        },
       },
     },
     opts_extend = { "sources.default" },
@@ -534,7 +562,7 @@ require("lazy").setup({
       vim.cmd.highlight("NvimTreeFolderArrowClosed guifg=#3FC5FF")
       vim.cmd.highlight("NvimTreeFolderArrowOpen guifg=#3FC5FF")
 
-      require("nvim-tree").setup({})
+      require("nvim-tree").setup()
 
       keymap.set("n", "<leader>ee", "<cmd>NvimTreeToggle<cr>", { desc = "Toggle file explorer" }) -- toggle file explorer
       keymap.set(
@@ -559,7 +587,7 @@ require("lazy").setup({
     version = "*",
     event = "VeryLazy",
     config = function()
-      require("nvim-surround").setup({})
+      require("nvim-surround").setup()
     end,
   },
   {
@@ -568,6 +596,7 @@ require("lazy").setup({
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-telescope/telescope-live-grep-args.nvim",
+      "nvim-telescope/telescope-project.nvim",
     },
     config = function()
       local telescope = require("telescope")
@@ -589,13 +618,25 @@ require("lazy").setup({
               },
             },
           },
+          project = {
+            base_dirs = {
+              "~/repo",
+            },
+            hidden_files = true, -- default: false
+            theme = "dropdown",
+            order_by = "asc",
+            search_by = "title",
+            sync_with_nvim_tree = true, -- default false
+          },
         },
       })
       telescope.load_extension("live_grep_args")
+      telescope.load_extension("project")
       keymap.set("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "Fuzzy find files in cwd" })
       keymap.set("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>", { desc = "Fuzzy find recent files" })
       keymap.set("n", "<leader>fg", "<cmd>Telescope live_grep_args<cr>", { desc = "Find string in cwd" })
       keymap.set("n", "<leader>fc", "<cmd>Telescope grep_string<cr>", { desc = "Find string under cursor in cwd" })
+      keymap.set("n", "<leader>fp", "<cmd>Telescope project<cr>", { desc = "Find Project" })
     end,
   },
   {
@@ -681,23 +722,40 @@ require("lazy").setup({
     "epwalsh/obsidian.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
     version = "*",
-    lazy = true,
-    ft = "markdown",
-    opts = {
-      workspaces = {
-        {
-          name = "personal",
-          path = "~/notes/personal",
-        },
-        {
-          name = "work",
-          path = "~/notes/work",
-        },
-      },
-    },
+    -- lazy = true,
+    -- ft = "markdown",
     init = function()
-      vim.opt.conceallevel = 1
+      vim.opt.conceallevel = 2
     end,
+    config = function()
+      require("obsidian").setup({
+        ui = { enable = false },
+        workspaces = {
+          {
+            name = "personal",
+            path = "~/notes/personal",
+          },
+          {
+            name = "work",
+            path = "~/notes/work",
+          },
+        },
+      })
+      keymap.set("n", "<leader>os", "<cmd>ObsidianQuickSwitch<cr>", { desc = "Switch notes" })
+      keymap.set("n", "<leader>oo", "<cmd>ObsidianOpen<cr>", { desc = "Open notes" })
+      keymap.set("n", "<leader>on", "<cmd>ObsidianNew<cr>", { desc = "Create new note" })
+      keymap.set("n", "<leader>ol", "<cmd>ObsidianLink<cr>", { desc = "Open notes link" })
+      keymap.set("n", "<leader>og", "<cmd>ObsidianSearch<cr>", { desc = "Search in notes" })
+      keymap.set("n", "<leader>ot", "<cmd>ObsidianTags<cr>", { desc = "Show tags" })
+      keymap.set("n", "<leader>od", "<cmd>ObsidianDailies<cr>", { desc = "Create a daily note" })
+      keymap.set("n", "<leader>ov", "<cmd>ObsidianTemplate<cr>", { desc = "Create a note with template" })
+      keymap.set("n", "<leader>ow", "<cmd>ObsidianWorkspace<cr>", { desc = "Change notes workspace" })
+    end,
+  },
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
+    opts = { latex = { enabled = false } },
   },
   {
     "folke/snacks.nvim",
@@ -723,7 +781,6 @@ require("lazy").setup({
         },
         notifier = { enabled = true },
         quickfile = { enabled = true },
-        scroll = { enabled = true },
         toggle = {
           color = {
             enabled = "green",
@@ -740,7 +797,7 @@ require("lazy").setup({
           },
         },
       })
-      keymap.set({ "n", "t" }, "<C-/>", function()
+      keymap.set({ "n", "t" }, "<leader>/", function()
         Snacks.terminal()
       end, { desc = "Toggle Terminal" })
       keymap.set("n", "<leader>z", function()
