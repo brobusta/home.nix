@@ -193,14 +193,29 @@
       bind-key -T copy-mode-vi y send-keys -X copy-selection-and-cancel
     '';
 
-    plugins = [
-      pkgs.tmuxPlugins.tmux-fzf
+    plugins = with pkgs.tmuxPlugins; [
+      tmux-fzf
       {
-        plugin = pkgs.tmuxPlugins.tokyo-night-tmux;
+        plugin = tokyo-night-tmux;
         extraConfig = ''
           set -g @tokyo-night-tmux_show_netspeed 1
           set -g @tokyo-night-tmux_netspeed_showip 1
           set -g @tokyo-night-tmux_netspeed_refresh 5
+        '';
+      }
+      {
+        plugin = resurrect;
+        extraConfig = ''
+          set -g @resurrect-dir "$HOME/.cache/tmux/resurrect"
+          set -g @resurrect-capture-pane-contents 'on'
+          set -g @resurrect-pane-contents-area 'visible'
+        '';
+      }
+      {
+        plugin = continuum;
+        extraConfig = ''
+          set -g @continuum-restore 'on'
+          set -g @continuum-save-interval '5' # minutes
         '';
       }
     ];
