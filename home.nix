@@ -236,6 +236,7 @@
       [ -f $HOME/.p10k.zsh ] && source $HOME/.p10k.zsh
       fzfTheme=${pkgs.vimPlugins.tokyonight-nvim}/extras/fzf/tokyonight_night.sh
       [ -f "$fzfTheme" ] && source "$fzfTheme"
+      [ -f $HOME/.congvu.localrc ] && source $HOME/.congvu.localrc
     '';
     shellAliases = {
       l = "eza -alh";
