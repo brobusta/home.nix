@@ -77,8 +77,8 @@ opt.relativenumber = true -- show relative line numbers
 opt.number = true -- shows absolute line number on cursor line (when relative number is on)
 
 -- tabs & indentation
-opt.tabstop = 2 -- 2 spaces for tabs (prettier default)
-opt.shiftwidth = 2 -- 2 spaces for indent width
+opt.tabstop = 4 -- 4 spaces for tabs (prettier default)
+opt.shiftwidth = 4 -- 4 spaces for indent width
 opt.expandtab = true -- expand tab to spaces
 opt.autoindent = true -- copy indent from current line when starting new one
 opt.scrolloff = 8 -- keep 8 lines below and above the cursor
@@ -132,7 +132,7 @@ require("lazy").setup({
           keymap.set("n", "}", "<cmd>AerialNext<cr>", { buffer = bufnr })
         end,
       })
-      keymap.set("n", "<leader>a", "<cmd>AerialToggle!<cr>", { desc = "Open Aerial" })
+      keymap.set("n", "<leader>aa", "<cmd>AerialToggle!<cr>", { desc = "Open Aerial" })
     end,
   },
   {
@@ -329,7 +329,7 @@ require("lazy").setup({
         end,
       })
 
-      keymap.set("n", "<leader>l", function()
+      keymap.set("n", "<leader>ll", function()
         lint.try_lint()
         -- lint.try_lint("cspell")
       end, { desc = "Trigger linting for current file" })
@@ -702,7 +702,7 @@ require("lazy").setup({
   {
     "mbbill/undotree",
     config = function()
-      keymap.set("n", "<leader>ut", vim.cmd.UndotreeToggle, { desc = "Toggle Undotree" })
+      keymap.set("n", "<leader>uu", vim.cmd.UndotreeToggle, { desc = "Toggle Undotree" })
     end,
   },
   {
@@ -739,6 +739,9 @@ require("lazy").setup({
             name = "work",
             path = "~/notes/work",
           },
+        },
+        daily_notes = {
+          folder = "journal",
         },
       })
       keymap.set("n", "<leader>os", "<cmd>ObsidianQuickSwitch<cr>", { desc = "Switch notes" })
