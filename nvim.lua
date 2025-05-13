@@ -582,6 +582,7 @@ require("lazy").setup({
       })
       telescope.load_extension("live_grep_args")
       telescope.load_extension("project")
+      keymap.set("n", "<leader>fb", "<cmd>Telescope buffers<cr>", { desc = "Find open buffers" })
       keymap.set("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "Fuzzy find files in cwd" })
       keymap.set("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>", { desc = "Fuzzy find recent files" })
       keymap.set("n", "<leader>fg", "<cmd>Telescope live_grep_args<cr>", { desc = "Find string in cwd" })
@@ -750,7 +751,7 @@ require("lazy").setup({
           },
         },
       })
-      keymap.set({ "n", "t" }, "<leader>/", function()
+      keymap.set({ "n", "t" }, "<C-\\>", function()
         Snacks.terminal()
       end, { desc = "Toggle Terminal" })
       keymap.set("n", "<leader>z", function()
