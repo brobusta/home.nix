@@ -431,39 +431,6 @@ require("lazy").setup({
         local hl = "DiagnosticSign" .. type
         vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
       end
-
-      mason_lspconfig.setup_handlers({
-        -- default handler for installed servers
-        function(server_name)
-          lspconfig[server_name].setup({
-            capabilities = capabilities,
-          })
-        end,
-        ["clangd"] = function()
-          lspconfig["clangd"].setup({
-            capabilities = capabilities,
-            cmd = { "clangd", "--offset-encoding=utf-16" },
-            filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "h", "hpp" },
-          })
-        end,
-        ["lua_ls"] = function()
-          -- configure lua server (with special settings)
-          lspconfig["lua_ls"].setup({
-            capabilities = capabilities,
-            settings = {
-              Lua = {
-                -- make the language server recognize "vim" global
-                diagnostics = {
-                  globals = { "vim" },
-                },
-                completion = {
-                  callSnippet = "Replace",
-                },
-              },
-            },
-          })
-        end,
-      })
     end,
   },
   {
@@ -483,14 +450,11 @@ require("lazy").setup({
     "williamboman/mason.nvim",
     dependencies = {
       "williamboman/mason-lspconfig.nvim",
-      "WhoIsSethDaniel/mason-tool-installer.nvim",
     },
     config = function()
       -- import mason
       local mason = require("mason")
       local mason_lspconfig = require("mason-lspconfig")
-
-      local mason_tool_installer = require("mason-tool-installer")
 
       -- enable mason and configure icons
       mason.setup({
@@ -509,22 +473,6 @@ require("lazy").setup({
         ensure_installed = {
           "lua_ls",
           "clangd",
-        },
-      })
-
-      mason_tool_installer.setup({
-        ensure_installed = {
-          -- "prettier", -- prettier formatter
-          "stylua", -- lua formatter
-          "clang-format", -- cpp formatter
-          "vale", -- markdown formatter
-          "shellcheck", -- shell formatter
-          "clangd", -- cpp lsp
-          "rust_analyzer", -- rust lsp
-          -- "gopls", -- go lsp
-          -- "cspell", -- code spellchecker
-          -- "buildifier", -- bazel formatter
-          -- "yamlfix", -- yaml formatter
         },
       })
     end,
