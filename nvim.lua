@@ -132,7 +132,7 @@ require("lazy").setup({
           keymap.set("n", "}", "<cmd>AerialNext<cr>", { buffer = bufnr })
         end,
       })
-      keymap.set("n", "<leader>aa", "<cmd>AerialToggle!<cr>", { desc = "Open Aerial" })
+      keymap.set("n", "<leader>ao", "<cmd>AerialToggle!<cr>", { desc = "Open Aerial" })
     end,
   },
   {
