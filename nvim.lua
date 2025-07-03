@@ -588,6 +588,7 @@ require("lazy").setup({
       keymap.set("n", "<leader>fg", "<cmd>Telescope live_grep_args<cr>", { desc = "Find string in cwd" })
       keymap.set("n", "<leader>fc", "<cmd>Telescope grep_string<cr>", { desc = "Find string under cursor in cwd" })
       keymap.set("n", "<leader>fp", "<cmd>Telescope project<cr>", { desc = "Find Project" })
+      keymap.set("n", "<leader>fb", "<cmd>Telescope buffers<cr>", { desc = "Fuzzy find buffers" })
     end,
   },
   {
