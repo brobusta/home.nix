@@ -21,6 +21,7 @@
     fortune
     helix
     htop
+    imagemagick
     lazygit
     pfetch
     python3.pkgs.pip
@@ -232,7 +233,7 @@
       save = 100000000;
       size = 100000000;
     };
-    initExtra = ''
+    initContent = ''
       [ -f $HOME/.nix-profile/etc/profile.d/nix.sh ] && source $HOME/.nix-profile/etc/profile.d/nix.sh
       [ -f $HOME/.p10k.zsh ] && source $HOME/.p10k.zsh
       fzfTheme=${pkgs.vimPlugins.tokyonight-nvim}/extras/fzf/tokyonight_night.sh
