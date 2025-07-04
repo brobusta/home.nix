@@ -229,6 +229,7 @@ require("lazy").setup({
           lua = { "stylua" },
           go = { "goimports", "gofmt" },
           cpp = { "clang_format" },
+          python = { "autopep8" },
           -- bzl = { "buildifier" },
         },
         formatters = {
@@ -344,8 +345,6 @@ require("lazy").setup({
       "saghen/blink.cmp",
     },
     config = function()
-      local lspconfig = require("lspconfig")
-      local mason_lspconfig = require("mason-lspconfig")
       local cmp = require("blink.cmp")
 
       vim.api.nvim_create_autocmd("LspAttach", {
@@ -422,15 +421,38 @@ require("lazy").setup({
         end,
       })
 
+      -- to recognize the `vim` global
+      vim.lsp.config["lua_ls"] = {
+        settings = {
+          Lua = {
+            diagnostics = {
+              globals = { "vim" },
+            },
+          },
+        },
+      }
       -- used to enable autocompletion (assign to every lsp server config)
       local capabilities = cmp.get_lsp_capabilities()
+      vim.lsp.config("*", {
+        capabilities = capabilities,
+      })
 
       -- Change the Diagnostic symbols in the sign column (gutter)
-      local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
-      for type, icon in pairs(signs) do
-        local hl = "DiagnosticSign" .. type
-        vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
-      end
+      vim.diagnostic.config({
+        virtual_text = true,
+        update_in_insert = false,
+        severity_sort = true,
+        float = { border = "rounded", source = "if_many" },
+        underline = { severity = vim.diagnostic.severity.ERROR },
+        signs = {
+          text = {
+            [vim.diagnostic.severity.ERROR] = "󰅚 ",
+            [vim.diagnostic.severity.WARN] = "󰀪 ",
+            [vim.diagnostic.severity.INFO] = "󰌶 ",
+            [vim.diagnostic.severity.HINT] = " ",
+          },
+        },
+      })
     end,
   },
   {
@@ -471,9 +493,11 @@ require("lazy").setup({
       mason_lspconfig.setup({
         -- list of servers for mason to install
         ensure_installed = {
-          "lua_ls",
           "clangd",
           "gopls",
+          "lua_ls",
+          "pylsp",
+          "rust_analyzer",
         },
       })
     end,
@@ -623,6 +647,7 @@ require("lazy").setup({
           "markdown",
           "markdown_inline",
           "prisma",
+          "python",
           "query",
           "regex",
           "rust",
@@ -738,6 +763,7 @@ require("lazy").setup({
           },
         },
         notifier = { enabled = true },
+        picker = { enabled = true },
         quickfile = { enabled = true },
         toggle = {
           color = {
