@@ -64,6 +64,7 @@
   };
 
   home.file = {
+    ".config/nvim/init.lua".source = config.lib.file.mkOutOfStoreSymlink ./nvim.lua;
     ".config/eza/theme.yml".source = "${pkgs.vimPlugins.tokyonight-nvim}/extras/eza/tokyonight.yml";
     ".config/yazi/theme.toml".source =
       "${pkgs.vimPlugins.tokyonight-nvim}/extras/yazi/tokyonight_night.toml";
@@ -78,10 +79,10 @@
     enable = true;
     extraConfig = ''
       Host work-pc
-        HostName 10.48.70.60
+        HostName 10.48.70.40
         User cong.vu
       Host work-lt
-        HostName 10.48.72.75
+        HostName 10.48.71.222
         User cong.vu
     '';
   };
@@ -114,7 +115,7 @@
     enable = true;
     defaultEditor = true;
     vimdiffAlias = true;
-    extraLuaConfig = builtins.readFile ./nvim.lua;
+    # extraLuaConfig = builtins.readFile ./nvim.lua;
   };
 
   programs.vim = {
