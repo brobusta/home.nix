@@ -37,7 +37,7 @@
     # fonts
     nerd-fonts.iosevka
     nerd-fonts.jetbrains-mono
-    noto-fonts-emoji
+    noto-fonts-color-emoji
   ];
 
   fonts = {
@@ -78,14 +78,22 @@
   programs.home-manager.enable = true;
   programs.ssh = {
     enable = true;
-    extraConfig = ''
-      Host work-pc
-        HostName 10.48.70.40
-        User cong.vu
-      Host work-lt
-        HostName 10.48.71.222
-        User cong.vu
-    '';
+    enableDefaultConfig = false;
+    matchBlocks = {
+      "*" = {
+        addKeysToAgent = "yes";
+        identitiesOnly = true;
+        identityFile = "~/.ssh/id_ed25519.pub";
+      };
+      "work-pc" = {
+        hostname = "10.48.70.40";
+        user = "cong.vu";
+      };
+      "work-lt" = {
+        hostname = "10.48.71.222";
+        user = "cong.vu";
+      };
+    };
   };
 
   programs.kitty = {
@@ -106,10 +114,9 @@
   };
 
   programs.git = {
-    package = pkgs.gitAndTools.gitFull;
     enable = true;
-    userName = "Vu Thanh Cong";
-    userEmail = "vuthanhcong.ict@gmail.com";
+    settings.user.name = "Vu Thanh Cong";
+    settings.user.email = "vuthanhcong.ict@gmail.com";
   };
 
   programs.neovim = {
