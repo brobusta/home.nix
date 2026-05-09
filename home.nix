@@ -8,7 +8,7 @@
 {
   home.username = "congvu";
   home.homeDirectory = "/home/congvu";
-  home.stateVersion = "24.11";
+  home.stateVersion = "25.11";
 
   home.packages = with pkgs; [
     bat
@@ -23,12 +23,13 @@
     htop
     imagemagick
     lazygit
+    mermaid-cli
     pfetch
-    python3.pkgs.pip
-    python3Full
     ripgrep
+    tectonic
     tig
     tree
+    tree-sitter
     unzip
     wget
     wl-clipboard
@@ -65,7 +66,6 @@
   };
 
   home.file = {
-    ".config/nvim/init.lua".source = config.lib.file.mkOutOfStoreSymlink ./nvim.lua;
     ".config/eza/theme.yml".source = "${pkgs.vimPlugins.tokyonight-nvim}/extras/eza/tokyonight.yml";
     ".config/yazi/theme.toml".source =
       "${pkgs.vimPlugins.tokyonight-nvim}/extras/yazi/tokyonight_night.toml";
@@ -123,7 +123,9 @@
     enable = true;
     defaultEditor = true;
     vimdiffAlias = true;
-    # extraLuaConfig = builtins.readFile ./nvim.lua;
+    withRuby = true;
+    withPython3 = true;
+    initLua = builtins.readFile ./nvim.lua;
   };
 
   programs.vim = {
@@ -246,6 +248,7 @@
       fzfTheme=${pkgs.vimPlugins.tokyonight-nvim}/extras/fzf/tokyonight_night.sh
       [ -f "$fzfTheme" ] && source "$fzfTheme"
       [ -f $HOME/.congvu.localrc ] && source $HOME/.congvu.localrc
+      [[ "$TERM_PROGRAM" == "kiro" ]] && source "$(kiro --locate-shell-integration-path zsh)"
     '';
     shellAliases = {
       l = "eza -alh";
