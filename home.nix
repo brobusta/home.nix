@@ -26,6 +26,7 @@
     mermaid-cli
     pfetch
     ripgrep
+    sqlite
     tectonic
     tig
     tree

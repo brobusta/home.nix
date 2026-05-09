@@ -13,6 +13,7 @@ vim.opt.rtp:prepend(lazypath)
 
 -- set leader key to space
 vim.g.mapleader = " "
+vim.g.maplocalleader = "\\"
 -- disable netrw
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
@@ -738,7 +739,27 @@ require("lazy").setup({
   {
     "MeanderingProgrammer/render-markdown.nvim",
     dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
+    ft = { "markdown" },
     opts = { latex = { enabled = false } },
+  },
+  {
+    "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    ft = { "markdown" },
+    build = function()
+      vim.fn["mkdp#util#install"]()
+    end,
+    init = function()
+      vim.g.mkdp_auto_close = 0
+      vim.g.mkdp_theme = "light"
+      vim.g.mkdp_preview_options = {
+        uml = {
+          -- TODO: run `docker run -d -p 8091:8080 plantuml/plantuml-server:latest`
+          server = "http://localhost:8091",
+          imageFormat = "svg",
+        },
+      }
+    end,
   },
   {
     "folke/snacks.nvim",
