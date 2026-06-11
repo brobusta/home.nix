@@ -13,6 +13,7 @@
   home.packages = with pkgs; [
     bat
     btop
+    calibre
     coreutils
     cowsay
     curl
@@ -80,10 +81,10 @@
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
-    matchBlocks = {
+    settings = {
       "*" = {
         addKeysToAgent = "yes";
-        identitiesOnly = true;
+        identitiesOnly = "yes";
         identityFile = "~/.ssh/id_ed25519.pub";
       };
       "work-pc" = {
@@ -93,6 +94,14 @@
       "work-lt" = {
         hostname = "10.48.71.222";
         user = "cong.vu";
+      };
+      "gateway" = {
+        hostname = "raspberrypi.local";
+        user = "congvu";
+      };
+      "pizero" = {
+        hostname = "pizero.local";
+        user = "claire";
       };
     };
   };
