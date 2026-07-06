@@ -181,14 +181,14 @@
       "--border"
       "--bind 'ctrl-y:execute-silent(wl-copy {})'"
     ];
-    changeDirWidgetCommand = "fd --type d --hidden --exclude '.git'";
-    changeDirWidgetOptions = [ "--preview 'tree -C {} | head -200'" ];
-    fileWidgetCommand = defaultCommand;
-    fileWidgetOptions = [
+    changeDirWidget.command = "fd --type d --hidden --exclude '.git'";
+    changeDirWidget.options = [ "--preview 'tree -C {} | head -200'" ];
+    fileWidget.command = defaultCommand;
+    fileWidget.options = [
       "--preview '(bat --style=changes --wrap never --color always {} || cat {} || (eza --tree --group-directories-first {} || tree -C {})) 2> /dev/null'"
       "--preview-window right:60%"
     ];
-    historyWidgetOptions = [
+    historyWidget.options = [
       "--preview 'echo {}'"
       "--preview-window down:3:hidden:wrap"
       "--bind '?:toggle-preview'"
